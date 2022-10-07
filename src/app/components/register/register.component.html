@@ -1,2 +1,23 @@
-<p>register works!</p>
-<a routerLink="/login">login</a>
+<div class="wrapper">
+	<form class="form" [formGroup]="registerForm">
+		<mat-form-field appearance="outline">
+			<mat-label>Login</mat-label>
+			<input formControlName="login" matInput required />
+			<mat-error *ngIf="registerForm.get('login')?.invalid">{{ getErrorMessage(registerForm.get('login')) }}</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Password</mat-label>
+			<input type="password" formControlName="password" matInput required />
+			<mat-error *ngIf="registerForm.get('password')?.invalid">{{ getErrorMessage(registerForm.get('password')) }}</mat-error>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Confirm Password</mat-label>
+			<input type="password" formControlName="password2" matInput required />
+			<mat-error *ngIf="registerForm.get('password2')?.invalid">{{ getErrorMessage(registerForm.get('password2')) }}</mat-error>
+		</mat-form-field>
+		<div class="buttonPanel">
+			<button (click)="register()" mat-raised-button color="primary" [disabled]="registerForm.invalid">Register</button>
+			<button routerLink="/login" mat-raised-button>Sign In</button>
+		</div>
+	</form>
+</div>
