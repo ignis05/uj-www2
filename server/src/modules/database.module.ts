@@ -47,9 +47,22 @@ export class DataBaseModule {
 			this.db?.run(`INSERT INTO users (login,password) VALUES (?,?)`, [user.login, user.password], function (err) {
 				if (err) {
 					console.log(err.message)
+					return resolve(true)
 				}
 				console.log(`Row was added to the table: ${this.lastID}`)
 				resolve(true)
+			})
+		})
+	}
+
+	getUser(login: string): Promise<User | null> {
+		return new Promise((resolve) => {
+			this.db?.get(`SELECT login, password FROM users WHERE login=?`, [login], function (err, row) {
+				if (err) {
+					console.log(err.message)
+					return resolve(null)
+				}
+				return resolve(row)
 			})
 		})
 	}
