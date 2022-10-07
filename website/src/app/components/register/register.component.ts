@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms'
+import { BackendService } from 'src/app/services/backend.service'
+import { Router } from '@angular/router'
+import { CookieService } from 'ngx-cookie-service'
 
 @Component({
 	selector: 'app-register',
@@ -8,7 +11,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 })
 export class RegisterComponent implements OnInit {
 	registerForm: FormGroup
-	constructor() {
+	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {
 		this.registerForm = new FormGroup({
 			login: new FormControl('', [Validators.required, Validators.minLength(4)]),
 			password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -39,5 +42,11 @@ export class RegisterComponent implements OnInit {
 		let login = this.registerForm.get('login')?.value
 		let password = this.registerForm.get('password')?.value
 		console.log(login, password)
+		this.backend.registerUser(login, password).subscribe((data: any) => {
+			if (data?.success) {
+				this.cookieService.set('isLoggedIn', 'true')
+				this.router.navigateByUrl('/main')
+			}
+		})
 	}
 }

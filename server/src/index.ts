@@ -9,11 +9,11 @@ const app: Express = express()
 const db = new DataBaseModule()
 const sm = new SessionManager()
 
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use('/', express.static('../../website/dist'))
 
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
 	let data = req.body
 	if (!data.login || !data.password) return res.status(400).send({ success: false, reason: 'Invalid request data' })
 
