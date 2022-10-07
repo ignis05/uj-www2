@@ -1,2 +1,16 @@
-<p>login works!</p>
-<a routerLink="/register">register</a>
+<div class="wrapper">
+	<div class="form">
+		<mat-form-field appearance="outline">
+			<mat-label>Login</mat-label>
+			<input [formControl]="login" matInput required/>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Password</mat-label>
+			<input type="password" [formControl]="password" matInput required/>
+		</mat-form-field>
+		<div class="buttonPanel">
+			<button (click)="signIn()" mat-raised-button color="primary" [disabled]="!login.valid || !password.valid">Sign in</button>
+			<button routerLink="/register" mat-raised-button>Register</button>
+		</div>
+	</div>
+</div>
