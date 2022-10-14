@@ -29,8 +29,16 @@ export class DataBaseModule {
 					db.run(`CREATE TABLE users (
 									ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 									login VARCHAR(255) NOT NULL UNIQUE,
-									password VARCHAR(255) NOT NULL
+									password VARCHAR(255) NOT NULL,
+									isAdmin INTEGER(1) DEFAULT "0" NOT NULL
 								)`)
+
+					// create admin user (login:administrator, password:administrator)
+					db.run(`INSERT INTO users (login,password, isAdmin) VALUES (?,?,?)`, [
+						'administrator',
+						'$argon2id$v=19$m=512,t=256,p=1$WQIBAweQ6Vk$y0gM1sgewoK1itxLpEm/i3uFxs9WZ3iUo4Z5XVruCxc',
+						'1',
+					])
 
 					resolve(false)
 				})
