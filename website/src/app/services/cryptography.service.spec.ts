@@ -21,9 +21,13 @@ describe('CryptographyService', () => {
 	it('createPasswordHash should create hashes', async () => {
 		const p1 = 'password1'
 		const h1 = await service.createPasswordHash(p1)
+		expect(h1).toBeTruthy()
+	})
+
+	it('should create identical hashes for identical passwords', async () => {
+		const p1 = 'password1'
+		const h1 = await service.createPasswordHash(p1)
 		const h2 = await service.createPasswordHash(p1)
-		console.log(h1)
-		console.log(h2)
-		expect(service).toBeTruthy()
+		expect(h1).toEqual(h2)
 	})
 })

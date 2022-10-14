@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
 
 import { BackendService } from 'src/app/services/backend.service'
+import { CryptographyService } from 'src/app/services/cryptography.service'
 
 @Component({
 	selector: 'app-login',
@@ -14,7 +15,12 @@ export class LoginComponent implements OnInit {
 	loginForm: FormGroup
 	loginErrorMessage: string = ''
 
-	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {
+	constructor(
+		private backend: BackendService,
+		private router: Router,
+		private cookieService: CookieService,
+		private crypto: CryptographyService
+	) {
 		this.loginForm = new FormGroup({
 			login: new FormControl('', [Validators.required, Validators.minLength(4)]),
 			password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -31,16 +37,17 @@ export class LoginComponent implements OnInit {
 		return 'unspecified error'
 	}
 
-	signIn(): void {
-		let login = this.loginForm.get('login')?.value
-		let password = this.loginForm.get('password')?.value
-		this.backend.loginUser(login, password).subscribe((data: any) => {
-			console.log(data)
+	async signIn() {
+		const login = this.loginForm.get('login')?.value
+		const password = this.loginForm.get('password')?.value
+		const passwordHash = await this.crypto.createPasswordHash(password)
+		this.backend.loginUser(login, passwordHash).subscribe((data: any) => {
 			if (data?.success) {
 				this.cookieService.set('isLoggedIn', 'true')
 				this.cookieService.set('username', login)
 				this.router.navigateByUrl('/main')
 			} else {
+				console.log(data)
 				if (data?.reason == 'Not exists') this.loginErrorMessage = "User with that username doesn't exist"
 				else if (data?.reason == 'Invalid password') this.loginErrorMessage = 'Invalid password'
 				else this.loginErrorMessage = `Login failed due to unexpected error: ${data?.reason}`

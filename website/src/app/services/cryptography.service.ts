@@ -9,12 +9,9 @@ export class CryptographyService {
 
 	createPasswordHash(password: string): Promise<string> {
 		return new Promise(async (resolve) => {
-			const salt = new Uint8Array(16)
-			window.crypto.getRandomValues(salt)
-
 			const key = await argon2id({
 				password,
-				salt, // salt is a buffer containing random bytes
+				salt: Uint8Array.from([2137, 2, 1, 3, 7, 7312, 21372137, 73122137]), // salt is a buffer containing random bytes
 				parallelism: 1,
 				iterations: 256,
 				memorySize: 512, // use 512KB memory

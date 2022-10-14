@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { RegisterComponent } from './components/register/register.component'
 import { LoginComponent } from './components/login/login.component'
 import { MainPageComponent } from './components/main-page/main-page.component'
+import { CryptographyService } from './services/cryptography.service'
 
 @NgModule({
 	declarations: [AppComponent, RegisterComponent, LoginComponent, MainPageComponent],
@@ -29,7 +30,7 @@ import { MainPageComponent } from './components/main-page/main-page.component'
 		MatButtonModule,
 		HttpClientModule,
 	],
-	providers: [CookieService, HttpClientModule],
+	providers: [CookieService, HttpClientModule, CryptographyService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
