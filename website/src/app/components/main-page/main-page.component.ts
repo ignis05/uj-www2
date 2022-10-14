@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
+import { CookieService } from 'ngx-cookie-service'
 
 @Component({
 	selector: 'app-main-page',
@@ -6,7 +8,16 @@ import { Component, OnInit } from '@angular/core'
 	styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent implements OnInit {
-	constructor() {}
+	username: string = ''
 
-	ngOnInit(): void {}
+	constructor(private router: Router, private cookieService: CookieService) {}
+
+	ngOnInit(): void {
+		this.username = this.cookieService.get('username')
+	}
+
+	logOut(): void {
+		this.cookieService.deleteAll()
+		this.router.navigateByUrl('/login')
+	}
 }

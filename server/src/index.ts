@@ -32,10 +32,10 @@ app.post('/api/register', async (req, res) => {
 	if (!data.login || !data.password) return res.status(400).send({ success: false, reason: 'Invalid request data' })
 
 	let user = await db.getUser(data.login)
-	if (user) return res.status(400).send({ success: false, reason: 'User exists' })
+	if (user) return res.status(200).send({ success: false, reason: 'User exists' })
 
 	let success = await db.registerUser({ login: data.login, password: data.password })
-	if (!success) return res.status(500).send({ success: false, reason: 'Failed to register' })
+	if (!success) return res.status(200).send({ success: false, reason: 'Failed to register' })
 
 	let token = sm.createSession(data.login)
 

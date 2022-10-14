@@ -11,6 +11,8 @@ import { CookieService } from 'ngx-cookie-service'
 })
 export class RegisterComponent implements OnInit {
 	registerForm: FormGroup
+	registerErrorMessage: string = ''
+
 	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {
 		this.registerForm = new FormGroup({
 			login: new FormControl('', [Validators.required, Validators.minLength(4)]),
@@ -45,7 +47,12 @@ export class RegisterComponent implements OnInit {
 		this.backend.registerUser(login, password).subscribe((data: any) => {
 			if (data?.success) {
 				this.cookieService.set('isLoggedIn', 'true')
+				this.cookieService.set('username', login)
 				this.router.navigateByUrl('/main')
+			} else {
+				console.log(data);
+				if (data?.reason == 'User exists') this.registerErrorMessage = 'This username is already taken'
+				else this.registerErrorMessage = `Login failed due to unexpected error: ${data?.reason}`
 			}
 		})
 	}

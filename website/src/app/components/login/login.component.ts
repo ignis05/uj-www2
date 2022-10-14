@@ -35,9 +35,10 @@ export class LoginComponent implements OnInit {
 		let login = this.loginForm.get('login')?.value
 		let password = this.loginForm.get('password')?.value
 		this.backend.loginUser(login, password).subscribe((data: any) => {
-			console.log(data);
+			console.log(data)
 			if (data?.success) {
 				this.cookieService.set('isLoggedIn', 'true')
+				this.cookieService.set('username', login)
 				this.router.navigateByUrl('/main')
 			} else {
 				if (data?.reason == 'Not exists') this.loginErrorMessage = "User with that username doesn't exist"
