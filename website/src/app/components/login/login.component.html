@@ -1,16 +1,19 @@
 <div class="wrapper">
-	<div class="form">
+	<form class="form" [formGroup]="loginForm">
 		<mat-form-field appearance="outline">
 			<mat-label>Login</mat-label>
-			<input [formControl]="login" matInput required/>
+			<input formControlName="login" matInput required />
+			<mat-error *ngIf="loginForm.get('login')?.invalid">{{ getErrorMessage(loginForm.get('login')) }}</mat-error>
 		</mat-form-field>
 		<mat-form-field appearance="outline">
 			<mat-label>Password</mat-label>
-			<input type="password" [formControl]="password" matInput required/>
+			<input type="password" formControlName="password" matInput required />
+			<mat-error *ngIf="loginForm.get('password')?.invalid">{{ getErrorMessage(loginForm.get('password')) }}</mat-error>
 		</mat-form-field>
+		<mat-error *ngIf="loginErrorMessage != ''">{{ loginErrorMessage }}</mat-error>
 		<div class="buttonPanel">
-			<button (click)="signIn()" mat-raised-button color="primary" [disabled]="!login.valid || !password.valid">Sign in</button>
+			<button (click)="signIn()" mat-raised-button color="primary" [disabled]="loginForm.invalid">Sign in</button>
 			<button routerLink="/register" mat-raised-button>Register</button>
 		</div>
-	</div>
+	</form>
 </div>

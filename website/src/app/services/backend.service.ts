@@ -10,4 +10,8 @@ export class BackendService {
 	registerUser(login: string, password: string) {
 		return this.http.post('/api/register', { login, password })
 	}
+
+	loginUser(login: string, password: string) {
+		return this.http.post('/api/login', { login, password })
+	}
 }
