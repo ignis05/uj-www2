@@ -13,7 +13,7 @@ import { CookieService } from 'ngx-cookie-service'
 import { AppComponent } from './app.component'
 import { AppRoutingModule } from './app-routing.module'
 import { RegisterComponent } from './components/register/register.component'
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/login/login.component'
 import { MainPageComponent } from './components/main-page/main-page.component'
 
 @NgModule({
@@ -29,7 +29,7 @@ import { MainPageComponent } from './components/main-page/main-page.component'
 		MatButtonModule,
 		HttpClientModule,
 	],
-	providers: [CookieService],
+	providers: [CookieService, HttpClientModule],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
