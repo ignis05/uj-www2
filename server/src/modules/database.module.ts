@@ -86,8 +86,7 @@ export class DataBaseModule {
 					console.log(err.message)
 					return resolve(false)
 				}
-				console.log(`isAdmin: `, row.isAdmin)
-				return resolve(true)
+				return resolve(row.isAdmin == 1)
 			})
 		})
 	}
