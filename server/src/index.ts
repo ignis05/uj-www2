@@ -42,6 +42,13 @@ app.post('/api/register', async (req, res) => {
 	res.status(201).cookie('token', token, { maxAge: 900000, httpOnly: true }).send({ success: true, token: token })
 })
 
+app.get('/api/posts', async (req, res) => {
+	console.log(req.cookies)
+
+	const posts = db.getPosts()
+	res.status(200).send(posts)
+})
+
 async function main() {
 	await db.open()
 

@@ -2,6 +2,7 @@ import sqlite3 from 'sqlite3'
 import fs from 'fs'
 
 import { User } from '../models/user.model'
+import { Post } from '../models/post.model'
 
 export class DataBaseModule {
 	db: sqlite3.Database | null = null
@@ -26,6 +27,7 @@ export class DataBaseModule {
 
 			if (!dbExists) {
 				db.serialize(() => {
+					// --- users table
 					db.run(`CREATE TABLE users (
 									ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 									login VARCHAR(255) NOT NULL UNIQUE,
@@ -38,6 +40,20 @@ export class DataBaseModule {
 						'administrator',
 						'$argon2id$v=19$m=512,t=256,p=1$WQIBAweQ6Vk$y0gM1sgewoK1itxLpEm/i3uFxs9WZ3iUo4Z5XVruCxc',
 						'1',
+					])
+
+					// --- posts table
+					db.run(`CREATE TABLE posts (
+						ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						username VARCHAR(255) NOT NULL,
+						date INTEGER NOT NULL,
+						content VARCHAR(1000) NOT NULL
+					)`)
+
+					db.run(`INSERT INTO posts (username, date, content) VALUES (?,?,?)`, [
+						'administrator',
+						Date.now(),
+						'To jest ogłoszenie dministtracyjne',
 					])
 
 					resolve(false)
@@ -71,6 +87,18 @@ export class DataBaseModule {
 					return resolve(null)
 				}
 				return resolve(row)
+			})
+		})
+	}
+
+	getPosts(): Promise<Post[]> {
+		return new Promise((resolve) => {
+			this.db?.all(`SELECT * FROM posts LIMIT 10`, function (err, rows) {
+				if (err) {
+					console.log(err.message)
+					return resolve([])
+				}
+				return resolve(rows)
 			})
 		})
 	}
