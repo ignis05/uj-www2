@@ -15,10 +15,11 @@ import { AppRoutingModule } from './app-routing.module'
 import { RegisterComponent } from './components/register/register.component'
 import { LoginComponent } from './components/login/login.component'
 import { MainPageComponent } from './components/main-page/main-page.component'
-import { CryptographyService } from './services/cryptography.service'
+import { CryptographyService } from './services/cryptography.service';
+import { PostComponent } from './components/post/post.component'
 
 @NgModule({
-	declarations: [AppComponent, RegisterComponent, LoginComponent, MainPageComponent],
+	declarations: [AppComponent, RegisterComponent, LoginComponent, MainPageComponent, PostComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,

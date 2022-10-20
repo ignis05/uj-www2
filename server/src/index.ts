@@ -1,5 +1,6 @@
 import express, { Express } from 'express'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 
 import { DataBaseModule } from './modules/database.module'
 import { SessionManager } from './modules/session-manager.module'
@@ -11,6 +12,7 @@ const sm = new SessionManager()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(cookieParser())
 app.use('/', express.static('../../website/dist'))
 
 app.post('/api/login', async (req, res) => {
@@ -43,10 +45,12 @@ app.post('/api/register', async (req, res) => {
 })
 
 app.get('/api/posts', async (req, res) => {
-	console.log(req.cookies)
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
 
-	const posts = db.getPosts()
-	res.status(200).send(posts)
+	const posts = await db.getPosts()
+	console.log(posts)
+	res.status(200).send({ success: true, posts })
 })
 
 async function main() {

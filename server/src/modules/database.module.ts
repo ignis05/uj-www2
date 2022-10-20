@@ -71,7 +71,7 @@ export class DataBaseModule {
 			this.db?.run(`INSERT INTO users (login,password) VALUES (?,?)`, [user.login, user.password], function (err) {
 				if (err) {
 					console.log(err.message)
-					return resolve(true)
+					return resolve(false)
 				}
 				console.log(`Row was added to the table: ${this.lastID}`)
 				resolve(true)
@@ -99,6 +99,19 @@ export class DataBaseModule {
 					return resolve([])
 				}
 				return resolve(rows)
+			})
+		})
+	}
+
+	addPost(post: Post): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.db?.run(`INSERT INTO posts (username, date, content) VALUES (?,?,?)`, [post.username, post.date, post.content], function (err) {
+				if (err) {
+					console.log(err.message)
+					return resolve(false)
+				}
+				console.log(`Added new post: ${this.lastID}`)
+				resolve(true)
 			})
 		})
 	}

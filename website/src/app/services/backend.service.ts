@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
+import { Post } from '../models/post.model'
 
 @Injectable({
 	providedIn: 'root',
@@ -13,5 +14,9 @@ export class BackendService {
 
 	loginUser(login: string, password: string) {
 		return this.http.post('/api/login', { login, password })
+	}
+
+	getPosts() {
+		return this.http.get('/api/posts')
 	}
 }
