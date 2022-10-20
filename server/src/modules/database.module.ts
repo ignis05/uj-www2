@@ -93,7 +93,7 @@ export class DataBaseModule {
 
 	getPosts(): Promise<Post[]> {
 		return new Promise((resolve) => {
-			this.db?.all(`SELECT * FROM posts LIMIT 10`, function (err, rows) {
+			this.db?.all(`SELECT * FROM posts ORDER BY date DESC LIMIT 10`, function (err, rows) {
 				if (err) {
 					console.log(err.message)
 					return resolve([])

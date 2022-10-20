@@ -19,4 +19,8 @@ export class BackendService {
 	getPosts() {
 		return this.http.get('/api/posts')
 	}
+
+	addPost(post: Post) {
+		return this.http.post('/api/posts/add', post)
+	}
 }

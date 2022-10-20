@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
 import { Post } from 'src/app/models/post.model'
@@ -12,18 +13,29 @@ import { BackendService } from 'src/app/services/backend.service'
 export class MainPageComponent implements OnInit {
 	username: string = ''
 	posts: Post[] = []
+	postForm: FormGroup = new FormGroup({
+		content: new FormControl('', []),
+	})
 
-	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {}
+	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {
+		this.refreshPosts = this.refreshPosts.bind(this)
+	}
 
 	ngOnInit(): void {
 		this.username = this.cookieService.get('username')
 
+		this.refreshPosts()
+
+		setInterval(this.refreshPosts, 1000) // 1 second
+	}
+
+	refreshPosts() {
 		this.backend.getPosts().subscribe((data: any) => {
 			if (data?.success) {
 				this.posts = data.posts
 			} else {
 				console.log(data)
-				if (data?.reason == 'No token') {
+				if (['No token', 'Invalid or expired token'].includes(data?.reason)) {
 					this.cookieService.deleteAll()
 					this.router.navigateByUrl('/login')
 				} else window.alert(`Unexpected backend error when fetching posts: ${data.reason}`)
@@ -33,6 +45,19 @@ export class MainPageComponent implements OnInit {
 
 	trackPost(index: number, post: Post) {
 		return post.ID
+	}
+
+	addPost() {
+		const username = this.username
+		const content = this.postForm.get('content')?.value
+		if (!username || !content) return console.error('no username or login')
+
+		this.backend.addPost({ username, content, date: Date.now(), ID: 0 }).subscribe((data: any) => {
+			console.log(data)
+			this.refreshPosts()
+			this.postForm.setValue({ content: '' })
+			this.postForm.markAsUntouched()
+		})
 	}
 
 	logOut(): void {

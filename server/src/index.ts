@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 
 import { DataBaseModule } from './modules/database.module'
 import { SessionManager } from './modules/session-manager.module'
+import { Post } from './models/post.model'
 
 const port = 3000
 const app: Express = express()
@@ -47,10 +48,28 @@ app.post('/api/register', async (req, res) => {
 app.get('/api/posts', async (req, res) => {
 	const token = req.cookies.token
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	const sessionLogin = sm.sessions.get(token)
+	if (!sessionLogin) return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
 
 	const posts = await db.getPosts()
-	console.log(posts)
+	posts.reverse()
 	res.status(200).send({ success: true, posts })
+})
+
+app.post('/api/posts/add', async (req, res) => {
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+
+	let data = req.body
+	if (!data.username || !data.content) return res.status(400).send({ success: false, reason: 'Invalid request data' })
+
+	const sessionLogin = sm.sessions.get(token)
+	if (sessionLogin !== data.username) return res.status(400).send({ success: false, reason: 'Token doesnt match username' })
+
+	const post: Post = { username: data.username, content: data.content, date: Date.now(), ID: 0 }
+
+	const result = await db.addPost(post)
+	res.status(200).send({ success: result })
 })
 
 async function main() {
