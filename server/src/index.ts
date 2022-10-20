@@ -72,6 +72,40 @@ app.post('/api/posts/add', async (req, res) => {
 	res.status(200).send({ success: result })
 })
 
+app.post('/api/posts/update', async (req, res) => {
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+
+	let data = req.body
+	if (!data.ID || !data.content) return res.status(400).send({ success: false, reason: 'Invalid request data' })
+
+	const sessionLogin = sm.sessions.get(token)
+	if (!sessionLogin) return res.status(400).send({ success: false, reason: 'Invalid token' })
+
+	const canEdit: boolean = await db.canEditPost(data.ID, sessionLogin)
+	if (!canEdit) return res.status(403).send({ success: false, reason: 'Insufficient permissions to edit other users posts' })
+
+	const result = await db.updatePost(data.ID, data.content)
+	res.status(200).send({ success: result })
+})
+
+app.post('/api/posts/remove', async (req, res) => {
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+
+	let data = req.body
+	if (!data.ID) return res.status(400).send({ success: false, reason: 'Invalid request data' })
+
+	const sessionLogin = sm.sessions.get(token)
+	if (!sessionLogin) return res.status(400).send({ success: false, reason: 'Invalid token' })
+
+	const canEdit: boolean = await db.canEditPost(data.ID, sessionLogin)
+	if (!canEdit) return res.status(403).send({ success: false, reason: 'Insufficient permissions to remove other users posts' })
+
+	const result = await db.removePost(data.ID)
+	res.status(200).send({ success: result })
+})
+
 async function main() {
 	await db.open()
 

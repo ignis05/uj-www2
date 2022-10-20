@@ -16,6 +16,7 @@ export class MainPageComponent implements OnInit {
 	postForm: FormGroup = new FormGroup({
 		content: new FormControl('', []),
 	})
+	interval: NodeJS.Timer | undefined
 
 	constructor(private backend: BackendService, private router: Router, private cookieService: CookieService) {
 		this.refreshPosts = this.refreshPosts.bind(this)
@@ -26,7 +27,11 @@ export class MainPageComponent implements OnInit {
 
 		this.refreshPosts()
 
-		setInterval(this.refreshPosts, 1000) // 1 second
+		this.interval = setInterval(this.refreshPosts, 1000) // 1 second
+	}
+
+	ngOnDestroy(): void {
+		if (this.interval) clearInterval(this.interval)
 	}
 
 	refreshPosts() {

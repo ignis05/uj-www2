@@ -23,4 +23,12 @@ export class BackendService {
 	addPost(post: Post) {
 		return this.http.post('/api/posts/add', post)
 	}
+
+	removePost(postId: number) {
+		return this.http.post('/api/posts/remove', { ID: postId })
+	}
+
+	updatePost(postId: number, newContent: string) {
+		return this.http.post('/api/posts/update', { ID: postId, content: newContent })
+	}
 }

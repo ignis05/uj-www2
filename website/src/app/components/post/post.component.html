@@ -1,4 +1,18 @@
 <div class="wrapper">
-	<div class="header">{{ post.username }} @ {{ post.date | date:'YYYY-MM-dd HH:mm:ss'}}</div>
-	<div class="convent">{{ post.content }}</div>
+	<div class="header">
+		<div>{{ post.username }} @ {{ post.date | date: 'YYYY-MM-dd HH:mm:ss' }}</div>
+    <div class="spacer"></div>
+		<button *ngIf="canManage" mat-icon-button (click)="toggleEditingMode()">
+			<mat-icon>{{ isInEditingMode ? 'save' : 'edit' }}</mat-icon>
+		</button>
+		<button *ngIf="canManage" mat-icon-button (click)="removePost()"><mat-icon>delete</mat-icon></button>
+	</div>
+	<div *ngIf="!isInEditingMode" class="content">{{ post.content }}</div>
+	<form *ngIf="isInEditingMode" class="addPost" [formGroup]="postForm">
+		<mat-form-field appearance="outline">
+			<mat-label>Content</mat-label>
+			<input autocomplete="off" formControlName="content" matInput />
+			<!-- <mat-error *ngIf="postForm.get('content')?.invalid">{{ getErrorMessage(postForm.get('content')) }}</mat-error> -->
+		</mat-form-field>
+	</form>
 </div>

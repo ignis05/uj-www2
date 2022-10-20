@@ -2,7 +2,12 @@
 <p>main-page works!</p>
 <button (click)="logOut()">Logout</button>
 <div class="postList">
-	<app-post *ngFor="let post of posts; trackBy: trackPost" [post]="post"></app-post>
+	<app-post
+		*ngFor="let post of posts; trackBy: trackPost"
+		[post]="post"
+		[canManage]="username === 'administrator' || username === post.username"
+		(postUpdated)="refreshPosts()"
+	></app-post>
 </div>
 <form class="addPost" [formGroup]="postForm">
 	<mat-form-field appearance="outline">

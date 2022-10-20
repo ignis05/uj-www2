@@ -79,6 +79,19 @@ export class DataBaseModule {
 		})
 	}
 
+	isAdmin(login: string): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.db?.get(`SELECT isAdmin FROM users WHERE login=?`, [login], function (err, row) {
+				if (err) {
+					console.log(err.message)
+					return resolve(false)
+				}
+				console.log(`isAdmin: `, row.isAdmin)
+				return resolve(true)
+			})
+		})
+	}
+
 	getUser(login: string): Promise<User | null> {
 		return new Promise((resolve) => {
 			this.db?.get(`SELECT login, password FROM users WHERE login=?`, [login], function (err, row) {
@@ -103,6 +116,20 @@ export class DataBaseModule {
 		})
 	}
 
+	canEditPost(id: number, username: string): Promise<boolean> {
+		return new Promise(async (resolve) => {
+			let isAdmin = await this.isAdmin(username)
+			if (isAdmin) return resolve(true)
+			this.db?.get(`SELECT username FROM posts WHERE ID=?`, [id], function (err, row) {
+				if (err) {
+					console.log(err.message)
+					return resolve(false)
+				}
+				return resolve(row.username === username)
+			})
+		})
+	}
+
 	addPost(post: Post): Promise<boolean> {
 		return new Promise((resolve) => {
 			this.db?.run(`INSERT INTO posts (username, date, content) VALUES (?,?,?)`, [post.username, post.date, post.content], function (err) {
@@ -111,6 +138,32 @@ export class DataBaseModule {
 					return resolve(false)
 				}
 				console.log(`Added new post: ${this.lastID}`)
+				resolve(true)
+			})
+		})
+	}
+
+	updatePost(id: number, newContent: string): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.db?.run(`UPDATE posts SET content=? WHERE ID=?`, [newContent, id], function (err) {
+				if (err) {
+					console.log(err.message)
+					return resolve(false)
+				}
+				console.log(`Updated post: ${id}`)
+				resolve(true)
+			})
+		})
+	}
+
+	removePost(id: number): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.db?.run(`DELETE FROM posts WHERE ID=?`, [id], function (err) {
+				if (err) {
+					console.log(err.message)
+					return resolve(false)
+				}
+				console.log(`Removed post: ${id}`)
 				resolve(true)
 			})
 		})
