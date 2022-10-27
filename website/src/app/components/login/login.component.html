@@ -13,7 +13,7 @@
 		<mat-error *ngIf="loginErrorMessage != ''">{{ loginErrorMessage }}</mat-error>
 		<div class="buttonPanel">
 			<button (click)="signIn()" mat-raised-button color="primary" [disabled]="loginForm.invalid">Sign in</button>
-			<button routerLink="/register" mat-raised-button>Register</button>
+			<button routerLink="/register" mat-stroked-button>Register</button>
 		</div>
 	</form>
 </div>

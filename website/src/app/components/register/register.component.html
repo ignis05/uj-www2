@@ -18,7 +18,7 @@
 		<mat-error *ngIf="registerErrorMessage != ''">{{ registerErrorMessage }}</mat-error>
 		<div class="buttonPanel">
 			<button (click)="register()" mat-raised-button color="primary" [disabled]="registerForm.invalid">Register</button>
-			<button routerLink="/login" mat-raised-button>Sign In</button>
+			<button routerLink="/login" mat-stroked-button>Sign In</button>
 		</div>
 	</form>
 </div>
