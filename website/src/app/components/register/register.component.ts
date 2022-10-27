@@ -8,7 +8,7 @@ import { CryptographyService } from 'src/app/services/cryptography.service'
 @Component({
 	selector: 'app-register',
 	templateUrl: './register.component.html',
-	styleUrls: ['./register.component.scss'],
+	styleUrls: ['./register.component.scss', '../common/form.style.scss'],
 })
 export class RegisterComponent implements OnInit {
 	registerForm: FormGroup

@@ -9,7 +9,7 @@ import { CryptographyService } from 'src/app/services/cryptography.service'
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss'],
+	styleUrls: ['./login.component.scss', '../common/form.style.scss'],
 })
 export class LoginComponent implements OnInit {
 	loginForm: FormGroup
