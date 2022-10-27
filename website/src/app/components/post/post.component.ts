@@ -6,7 +6,7 @@ import { BackendService } from 'src/app/services/backend.service'
 @Component({
 	selector: 'app-post[post]',
 	templateUrl: './post.component.html',
-	styleUrls: ['./post.component.css'],
+	styleUrls: ['./post.component.scss'],
 })
 export class PostComponent implements OnInit {
 	@Input() post: Post = { username: '-', content: '-', date: Date.now(), ID: Date.now() }

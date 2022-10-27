@@ -8,7 +8,7 @@ import { BackendService } from 'src/app/services/backend.service'
 @Component({
 	selector: 'app-main-page',
 	templateUrl: './main-page.component.html',
-	styleUrls: ['./main-page.component.css'],
+	styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
 	username: string = ''

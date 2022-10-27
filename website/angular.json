@@ -22,7 +22,7 @@
 						"styles": [
 							"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
 							"node_modules/bootstrap/dist/css/bootstrap.min.css",
-							"src/styles.css"
+							"src/styles.scss"
 						],
 						"scripts": []
 					},
@@ -88,13 +88,18 @@
 						"tsConfig": "tsconfig.spec.json",
 						"karmaConfig": "karma.conf.js",
 						"assets": ["src/favicon.ico", "src/assets"],
-						"styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.css"],
+						"styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.scss"],
 						"scripts": []
 					}
 				}
 			}
 		}
-	},
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
 	"cli": {
 		"analytics": false
 	}
