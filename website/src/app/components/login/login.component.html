@@ -1,11 +1,12 @@
 <div class="wrapper">
-	<form class="form" [formGroup]="loginForm">
-		<mat-form-field appearance="outline">
+	<form class="form rounded shadow" [formGroup]="loginForm">
+		<h3 class="title">Log into existing account:</h3>
+		<mat-form-field appearance="outline" [style.width.%]="100">
 			<mat-label>Login</mat-label>
 			<input formControlName="login" matInput required />
 			<mat-error *ngIf="loginForm.get('login')?.invalid">{{ getErrorMessage(loginForm.get('login')) }}</mat-error>
 		</mat-form-field>
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="outline" [style.width.%]="100">
 			<mat-label>Password</mat-label>
 			<input type="password" formControlName="password" matInput required />
 			<mat-error *ngIf="loginForm.get('password')?.invalid">{{ getErrorMessage(loginForm.get('password')) }}</mat-error>
@@ -13,7 +14,7 @@
 		<mat-error *ngIf="loginErrorMessage != ''">{{ loginErrorMessage }}</mat-error>
 		<div class="buttonPanel">
 			<button (click)="signIn()" mat-raised-button color="primary" [disabled]="loginForm.invalid">Sign in</button>
-			<button routerLink="/register" mat-stroked-button>Register</button>
+			<button routerLink="/register" mat-stroked-button>Registration</button>
 		</div>
 	</form>
 </div>

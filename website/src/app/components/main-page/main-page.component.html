@@ -1,19 +1,24 @@
-<p>Logged in as: {{ username }}</p>
-<p>main-page works!</p>
-<button (click)="logOut()">Logout</button>
-<div class="postList">
-	<app-post
-		*ngFor="let post of posts; trackBy: trackPost"
-		[post]="post"
-		[canManage]="username === 'administrator' || username === post.username"
-		(postUpdated)="refreshPosts()"
-	></app-post>
+<header>
+	<div class="spacer"></div>
+	<div>Logged in as: {{ username }}</div>
+	<button mat-raised-button (click)="logOut()">Logout</button>
+</header>
+<div class="wrapper">
+	<div class="postList">
+		<app-post
+			*ngFor="let post of posts; trackBy: trackPost"
+			[post]="post"
+			[canManage]="username === 'administrator' || username === post.username"
+			(postUpdated)="refreshPosts()"
+			class="post"
+		></app-post>
+	</div>
+	<form class="addPost" [formGroup]="postForm">
+		<mat-form-field [style.width.px]="400" appearance="outline">
+			<mat-label>Content</mat-label>
+			<input autocomplete="off" formControlName="content" matInput />
+			<!-- <mat-error *ngIf="postForm.get('content')?.invalid">{{ getErrorMessage(postForm.get('content')) }}</mat-error> -->
+		</mat-form-field>
+		<button (click)="addPost()" mat-raised-button color="primary" [disabled]="postForm.get('content')?.value.length < 4">Add post</button>
+	</form>
 </div>
-<form class="addPost" [formGroup]="postForm">
-	<mat-form-field appearance="outline">
-		<mat-label>Content</mat-label>
-		<input autocomplete="off" formControlName="content" matInput />
-		<!-- <mat-error *ngIf="postForm.get('content')?.invalid">{{ getErrorMessage(postForm.get('content')) }}</mat-error> -->
-	</mat-form-field>
-	<button (click)="addPost()" mat-raised-button color="primary" [disabled]="postForm.get('content')?.value.length < 4">Add post</button>
-</form>
