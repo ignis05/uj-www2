@@ -11,11 +11,18 @@ const app: Express = express()
 const db = new DataBaseModule()
 const sm = new SessionManager()
 
+// data parsers
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
-app.use('/', express.static('../../website/dist'))
 
+// static serve of dist dir, redirect all SPA links to index
+app.use('/', express.static('../../website/dist'))
+app.get('/main', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
+app.get('/login', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
+app.get('/register', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
+
+// login request handler
 app.post('/api/login', async (req, res) => {
 	let data = req.body
 	if (!data.login || !data.password) return res.status(400).send({ success: false, reason: 'Invalid request data' })
@@ -30,6 +37,7 @@ app.post('/api/login', async (req, res) => {
 	res.status(200).cookie('token', token, { maxAge: 900000, httpOnly: true }).send({ success: true, token: token })
 })
 
+// register request handler
 app.post('/api/register', async (req, res) => {
 	let data = req.body
 	if (!data.login || !data.password) return res.status(400).send({ success: false, reason: 'Invalid request data' })
@@ -45,6 +53,7 @@ app.post('/api/register', async (req, res) => {
 	res.status(201).cookie('token', token, { maxAge: 900000, httpOnly: true }).send({ success: true, token: token })
 })
 
+// post list api url
 app.get('/api/posts', async (req, res) => {
 	const token = req.cookies.token
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
@@ -56,6 +65,7 @@ app.get('/api/posts', async (req, res) => {
 	res.status(200).send({ success: true, posts })
 })
 
+// add post handler
 app.post('/api/posts/add', async (req, res) => {
 	const token = req.cookies.token
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
@@ -72,6 +82,7 @@ app.post('/api/posts/add', async (req, res) => {
 	res.status(200).send({ success: result })
 })
 
+// update post handler
 app.post('/api/posts/update', async (req, res) => {
 	const token = req.cookies.token
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
@@ -89,6 +100,7 @@ app.post('/api/posts/update', async (req, res) => {
 	res.status(200).send({ success: result })
 })
 
+// remove post handler
 app.post('/api/posts/remove', async (req, res) => {
 	const token = req.cookies.token
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
@@ -106,6 +118,7 @@ app.post('/api/posts/remove', async (req, res) => {
 	res.status(200).send({ success: result })
 })
 
+// init db and launch server
 async function main() {
 	await db.open()
 
