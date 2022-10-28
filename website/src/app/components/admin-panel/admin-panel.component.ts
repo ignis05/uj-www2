@@ -40,4 +40,11 @@ export class AdminPanelComponent implements OnInit {
 		this.cookieService.deleteAll()
 		this.router.navigateByUrl('/login')
 	}
+
+	deleteUser(username: string) {
+		this.backend.deleteUser(username).subscribe((data: any) => {
+			console.log(data)
+      this.getUsersList()
+		})
+	}
 }

@@ -20,6 +20,10 @@ export class BackendService {
 		return this.http.post('/api/login', { login, password })
 	}
 
+	deleteUser(username: string) {
+		return this.http.post('/api/users/remove', { username })
+	}
+
 	getPosts() {
 		return this.http.get('/api/posts')
 	}

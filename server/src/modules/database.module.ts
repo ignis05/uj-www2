@@ -105,12 +105,28 @@ export class DataBaseModule {
 
 	getUsers(): Promise<Object[]> {
 		return new Promise((resolve) => {
-			this.db?.all(`SELECT users.login as username, COUNT(*) as count FROM users LEFT JOIN posts ON posts.username=users.login GROUP BY users.login ORDER BY username ASC`, function (err, rows) {
+			this.db?.all(
+				`SELECT users.login as username, COUNT(*) as count FROM users LEFT JOIN posts ON posts.username=users.login GROUP BY users.login ORDER BY username ASC`,
+				function (err, rows) {
+					if (err) {
+						console.log(err.message)
+						return resolve([])
+					}
+					return resolve(rows)
+				}
+			)
+		})
+	}
+
+	removeUser(login: string): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.db?.run(`DELETE FROM users WHERE login=?`, [login], function (err) {
 				if (err) {
 					console.log(err.message)
-					return resolve([])
+					return resolve(false)
 				}
-				return resolve(rows)
+				console.log(`Removed user: ${login}`)
+				resolve(true)
 			})
 		})
 	}

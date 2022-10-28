@@ -5,12 +5,18 @@
 	<button mat-raised-button (click)="logOut()">Logout</button>
 </header>
 <div class="wrapper">
-	<div class="usersList shadow rounded">
-		<div *ngFor="let user of userList" class="user">
+	<div class="usersList">
+		<div *ngFor="let user of userList" class="user shadow rounded">
 			<div>{{ user.username }}</div>
 			<div class="spacer"></div>
 			<div>Posts: {{ user.count }}</div>
-			<mat-icon [style.visibility]="user.username == 'administrator' ? 'hidden' : 'visible'" class="icon">delete</mat-icon>
+			<mat-icon
+				(click)="deleteUser(user.username)"
+				[style.visibility]="user.username == 'administrator' ? 'hidden' : 'visible'"
+				class="icon"
+			>
+				delete
+			</mat-icon>
 		</div>
 	</div>
 </div>

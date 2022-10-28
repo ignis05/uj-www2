@@ -60,7 +60,7 @@ app.get('/api/users', async (req, res) => {
 	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
 	const sessionLogin = sm.sessions.get(token)
 	if (!sessionLogin) return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
-	if(sessionLogin != 'administrator') return res.status(200).send({ success: false, reason: 'Not an administrator account' })
+	if (sessionLogin != 'administrator') return res.status(200).send({ success: false, reason: 'Not an administrator account' })
 
 	const users = await db.getUsers()
 	res.status(200).send({ success: true, users })
@@ -76,6 +76,25 @@ app.get('/api/posts', async (req, res) => {
 	const posts = await db.getPosts()
 	posts.reverse()
 	res.status(200).send({ success: true, posts })
+})
+
+// remove user handler
+app.post('/api/users/remove', async (req, res) => {
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+
+	let data = req.body
+	if (!data.username) return res.status(400).send({ success: false, reason: 'Invalid request data' })
+
+	const sessionLogin = sm.sessions.get(token)
+	if (!sessionLogin) return res.status(400).send({ success: false, reason: 'Invalid token' })
+	if (sessionLogin != 'administrator')
+		return res.status(403).send({ success: false, reason: 'Insufficient permissions to remove other users' })
+
+	if (data.username == 'administrator') return res.status(403).send({ success: false, reason: 'Not authorized to remove admin users' })
+
+	const result = await db.removeUser(data.username)
+	res.status(200).send({ success: result })
 })
 
 // add post handler
