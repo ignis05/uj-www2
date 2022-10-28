@@ -18,9 +18,10 @@ import { LoginComponent } from './components/login/login.component'
 import { MainPageComponent } from './components/main-page/main-page.component'
 import { CryptographyService } from './services/cryptography.service'
 import { PostComponent } from './components/post/post.component'
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component'
 
 @NgModule({
-	declarations: [AppComponent, RegisterComponent, LoginComponent, MainPageComponent, PostComponent],
+	declarations: [AppComponent, RegisterComponent, LoginComponent, MainPageComponent, PostComponent, AdminPanelComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,

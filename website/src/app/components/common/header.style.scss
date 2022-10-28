@@ -1,0 +1,20 @@
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 5px;
+	background-color: var(--bs-teal);
+}
+
+header > * {
+	margin: 0 10px;
+}
+
+header > button {
+	background-color: var(--bs-primary);
+}
+
+.spacer {
+	flex: 1 1;
+}

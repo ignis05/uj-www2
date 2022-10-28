@@ -21,6 +21,7 @@ app.use('/', express.static('../../website/dist'))
 app.get('/main', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
 app.get('/login', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
 app.get('/register', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
+app.get('/admin', (req, res) => res.sendFile('index.html', { root: '../../website/dist/' }))
 
 // login request handler
 app.post('/api/login', async (req, res) => {
@@ -51,6 +52,18 @@ app.post('/api/register', async (req, res) => {
 	let token = sm.createSession(data.login)
 
 	res.status(201).cookie('token', token, { maxAge: 900000, httpOnly: true }).send({ success: true, token: token })
+})
+
+// user list api url
+app.get('/api/users', async (req, res) => {
+	const token = req.cookies.token
+	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	const sessionLogin = sm.sessions.get(token)
+	if (!sessionLogin) return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
+	if(sessionLogin != 'administrator') return res.status(200).send({ success: false, reason: 'Not an administrator account' })
+
+	const users = await db.getUsers()
+	res.status(200).send({ success: true, users })
 })
 
 // post list api url

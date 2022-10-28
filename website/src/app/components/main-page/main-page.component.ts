@@ -8,7 +8,7 @@ import { BackendService } from 'src/app/services/backend.service'
 @Component({
 	selector: 'app-main-page',
 	templateUrl: './main-page.component.html',
-	styleUrls: ['./main-page.component.scss'],
+	styleUrls: ['./main-page.component.scss', '../common/header.style.scss'],
 })
 export class MainPageComponent implements OnInit {
 	username: string = ''
@@ -41,8 +41,7 @@ export class MainPageComponent implements OnInit {
 			} else {
 				console.log(data)
 				if (['No token', 'Invalid or expired token'].includes(data?.reason)) {
-					this.cookieService.deleteAll()
-					this.router.navigateByUrl('/login')
+					this.logOut()
 				} else window.alert(`Unexpected backend error when fetching posts: ${data.reason}`)
 			}
 		})

@@ -1,0 +1,16 @@
+<header>
+	<button mat-raised-button routerLink="/main">Main Page</button>
+	<div class="spacer"></div>
+	<div>Logged in as: {{ username }}</div>
+	<button mat-raised-button (click)="logOut()">Logout</button>
+</header>
+<div class="wrapper">
+	<div class="usersList shadow rounded">
+		<div *ngFor="let user of userList" class="user">
+			<div>{{ user.username }}</div>
+			<div class="spacer"></div>
+			<div>Posts: {{ user.count }}</div>
+			<mat-icon [style.visibility]="user.username == 'administrator' ? 'hidden' : 'visible'" class="icon">delete</mat-icon>
+		</div>
+	</div>
+</div>

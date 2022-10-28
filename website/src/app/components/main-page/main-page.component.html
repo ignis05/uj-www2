@@ -1,4 +1,5 @@
 <header>
+	<button mat-raised-button *ngIf="username === 'administrator'" routerLink="/admin">Admin Panel</button>
 	<div class="spacer"></div>
 	<div>Logged in as: {{ username }}</div>
 	<button mat-raised-button (click)="logOut()">Logout</button>

@@ -8,6 +8,10 @@ import { Post } from '../models/post.model'
 export class BackendService {
 	constructor(private http: HttpClient) {}
 
+	getUsers() {
+		return this.http.get('/api/users')
+	}
+
 	registerUser(login: string, password: string) {
 		return this.http.post('/api/register', { login, password })
 	}

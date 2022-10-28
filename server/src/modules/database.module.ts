@@ -103,6 +103,18 @@ export class DataBaseModule {
 		})
 	}
 
+	getUsers(): Promise<Object[]> {
+		return new Promise((resolve) => {
+			this.db?.all(`SELECT users.login as username, COUNT(*) as count FROM users LEFT JOIN posts ON posts.username=users.login GROUP BY users.login ORDER BY username ASC`, function (err, rows) {
+				if (err) {
+					console.log(err.message)
+					return resolve([])
+				}
+				return resolve(rows)
+			})
+		})
+	}
+
 	getPosts(): Promise<Post[]> {
 		return new Promise((resolve) => {
 			this.db?.all(`SELECT * FROM posts ORDER BY date DESC LIMIT 10`, function (err, rows) {
