@@ -54,12 +54,28 @@ app.post('/api/register', async (req, res) => {
 	res.status(201).cookie('token', token, { maxAge: 900000, httpOnly: true }).send({ success: true, token: token })
 })
 
+// clear session and remove server cookies
+app.post('/api/logout', async (req, res) => {
+	const token = req.cookies.token
+	if (token) sm.sessions.delete(token)
+
+	res.clearCookie('token')
+
+	return res.status(200).send({ success: true })
+})
+
 // user list api url
 app.get('/api/users', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 	const sessionLogin = sm.sessions.get(token)
-	if (!sessionLogin) return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
+	if (!sessionLogin) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
+	}
 	if (sessionLogin != 'administrator') return res.status(200).send({ success: false, reason: 'Not an administrator account' })
 
 	const users = await db.getUsers()
@@ -69,9 +85,15 @@ app.get('/api/users', async (req, res) => {
 // post list api url
 app.get('/api/posts', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 	const sessionLogin = sm.sessions.get(token)
-	if (!sessionLogin) return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
+	if (!sessionLogin) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'Invalid or expired token' })
+	}
 
 	const posts = await db.getPosts()
 	posts.reverse()
@@ -81,7 +103,10 @@ app.get('/api/posts', async (req, res) => {
 // remove user handler
 app.post('/api/users/remove', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 
 	let data = req.body
 	if (!data.username) return res.status(400).send({ success: false, reason: 'Invalid request data' })
@@ -100,7 +125,10 @@ app.post('/api/users/remove', async (req, res) => {
 // add post handler
 app.post('/api/posts/add', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 
 	let data = req.body
 	if (!data.username || !data.content) return res.status(400).send({ success: false, reason: 'Invalid request data' })
@@ -117,7 +145,10 @@ app.post('/api/posts/add', async (req, res) => {
 // update post handler
 app.post('/api/posts/update', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 
 	let data = req.body
 	if (!data.ID || !data.content) return res.status(400).send({ success: false, reason: 'Invalid request data' })
@@ -135,7 +166,10 @@ app.post('/api/posts/update', async (req, res) => {
 // remove post handler
 app.post('/api/posts/remove', async (req, res) => {
 	const token = req.cookies.token
-	if (!token) return res.status(200).send({ success: false, reason: 'No token' })
+	if (!token) {
+		res.clearCookie('token')
+		return res.status(200).send({ success: false, reason: 'No token' })
+	}
 
 	let data = req.body
 	if (!data.ID) return res.status(400).send({ success: false, reason: 'Invalid request data' })

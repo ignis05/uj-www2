@@ -65,7 +65,9 @@ export class MainPageComponent implements OnInit {
 	}
 
 	logOut(): void {
-		this.cookieService.deleteAll()
-		this.router.navigateByUrl('/login')
+		this.backend.logout().subscribe(() => {
+			this.cookieService.deleteAll()
+			this.router.navigateByUrl('/login')
+		})
 	}
 }
